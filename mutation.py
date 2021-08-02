@@ -1,5 +1,10 @@
 import random
+from itertools import repeat
 
+try:
+    from collections.abc import Sequence
+except ImportError:
+    from collections import Sequence
 
 def mutation(individual, low, up, indpb):
     """modified from the original mutUniformInt in deap.tools to have attributes with step=5 for thickness insolation
