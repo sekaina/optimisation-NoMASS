@@ -40,9 +40,9 @@ logzero.logger.addHandler(log)
 IDDPATH = config.IDDPATH
 EPLUSPATH = config.EPLUSPATH
 
-IDFPATH = "./modelNoMASS/"#"./model/"
+IDFPATH = config.IDFPATH
 #LIBFILE = "./model/material.idf"
-LIBWINDOW = "./model/windows.idf"
+LIBWINDOW = IDFPATH + "windows.idf"
 
 EPWFILE = IDFPATH + "CHAMBERY.epw"
 
@@ -535,8 +535,6 @@ def economy_operation(Echauffage):
     return cost
 
 if __name__ == "__main__": #pour tester
-    #building="./model/IDM.idf"
-    #epmodel = initialize(building)
     ind=[20,40,20,2]
     fitness= evaluate(ind)
     chauffage=fitness[0]

@@ -15,7 +15,7 @@ building_area=97.5
 IDF_WINDOWS = None
 IDF_WALLS = None
 
-
+IDFPATH = "./modelNoMASS/"#"./model/"
 IDDPATH = "C:\EnergyPlusV9-5-0\Energy+.idd"# "/usr/local/EnergyPlus-8-6-0/Energy+.idd"
 EPLUSPATH = "C:\EnergyPlusV9-5-0"
 TIMESTEP = 12
