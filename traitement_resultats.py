@@ -74,7 +74,7 @@ def plots(Pareto_objective_functions, Pareto_decision_parametres, economic_solut
         """to plot the tree functions"""
         fig = plt.figure()
         ax = plt.axes(projection='3d')
-        ax.scatter(Pareto_objective_functions[:, 0], Pareto_objective_functions[:, 2], Pareto_objective_functions[:, 1])
+        ax.scatter(Pareto_objective_functions[:, 0]/97.5, Pareto_objective_functions[:, 2]/97.5, Pareto_objective_functions[:, 1])
         ax.set_xlabel("besoins de chauffage kWh/m2")
         ax.set_ylabel("Cout global actualisé en euros/m2")
         ax.set_zlabel("heures d'inconfort (T>Tconf+2°C)")
@@ -86,9 +86,9 @@ def plots(Pareto_objective_functions, Pareto_decision_parametres, economic_solut
         import pandas as pd
         import hvplot.pandas
 
-        df = pd.DataFrame({"besoins de chauffage kWh/m2" : Pareto_objective_functions[:, 0], 
+        df = pd.DataFrame({"besoins de chauffage kWh/m2" : Pareto_objective_functions[:, 0]/97.5, 
                         "heures d'inconfort (T>Tconf+2°C)" :  Pareto_objective_functions[:, 1],
-                        "Cout global actualisé en euros/m2" :  Pareto_objective_functions[:, 2],
+                        "Cout global actualisé en euros/m2" :  Pareto_objective_functions[:, 2]/97.5,
                         "ep_murs_ext" : Pareto_decision_parametres[:, 0],
                         "ep_plancher_haut" : Pareto_decision_parametres[:, 1],
                         "ep_plancher_bas" : Pareto_decision_parametres[:, 2],
@@ -164,7 +164,10 @@ if __name__=="__main__":
     Pareto_decision_parametres=Pareto_decision_parametres.astype('float64')
 from fitnessesEP import evaluate
 #ref_solution=evaluate([20,40,20,2])
-ref_solution=[396.99, 174.93, 16201.53]
+#deterministe
+#ref_solution=[396.99, 174.93, 16201.53] 
+#nomass
+ref_solution=[945.77, 135.33, 15979.44] 
 economic_solution=best_solution(Pareto_objective_functions,Pareto_decision_parametres, economic=True, confortable=False, efficient=False)
 comfortable_solution=best_solution(Pareto_objective_functions,Pareto_decision_parametres, economic=False, confortable=True, efficient=False)
 efficient_solution=best_solution(Pareto_objective_functions,Pareto_decision_parametres, economic=False, confortable=False, efficient=True)
