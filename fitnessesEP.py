@@ -454,6 +454,40 @@ def overheating(result):
     logger.debug("heures inconfort = %s " % (heures_inconfort_tot))
     return heures_inconfort_tot
 
+def overheating_from_csv(csv_filename):
+    logger.debug("computing overheating")
+    indoor = None
+    out = None
+    heures_inconfort=[]
+    oh = []
+    data=pd.read_csv(csv_filename)
+    indoor = data.iloc[:, [
+        "Mean Air Temperature" in col for col in data.columns]]
+    out = data.iloc[:,[
+        "Outdoor Air Drybulb Temperature" in col for col in data.columns]]
+    Text_moy_jour=[float(out[i:289+i].mean()) for i in range(0,len(out),288)]
+    Text_glissantes=moyenne_glissante_norme(Text_moy_jour, 7)#moyenne glissante sur 7 jours selon la norme NF EN 16798-1
+    Tconfort=[0.33*Tmoyext+18.8 for Tmoyext in Text_glissantes] # temperature de confort adaptatif selon la norme NF EN 16798-1
+    for zone, area in config.zones_areas.items():
+        oh_zone=0
+        heures_inconfort_zone=0
+        indoor_zone=indoor.iloc[:,[zone in col for col in indoor.columns]]
+        T_moy_jour=[float(indoor_zone[i:289+i].mean()) for i in range(0,len(indoor_zone),288)]
+        for i in range(len(T_moy_jour)):
+            if T_moy_jour[i]>(Tconfort[i]+2):
+                oh_zone+=T_moy_jour[i]-(Tconfort[i]+2)
+                heures_inconfort_zone+=1
+        oh.append(oh_zone)
+        heures_inconfort.append(heures_inconfort_zone)
+    area_tot=config.building_area
+    areas=[]
+    for zone,area in config.zones_areas.items():
+        areas.append(area)
+    oh_tot=sum([x*y for x,y in zip(areas,oh)])/area_tot  #somme pondérée par les surfaces
+    heures_inconfort_tot=sum([x*y for x,y in zip(areas,heures_inconfort)])/area_tot  
+    logger.debug("overheating = %s °C/h" % (oh_tot))
+    logger.debug("heures inconfort = %s " % (heures_inconfort_tot))
+    return heures_inconfort_tot
 
 
 
@@ -535,11 +569,12 @@ def economy_operation(Echauffage):
     return cost
 
 if __name__ == "__main__": #pour tester
-    ind=[20,40,20,2]
-    fitness= evaluate(ind)
-    chauffage=fitness[0]
-    print(chauffage, type(chauffage))
-
+    #ind=[20,40,20,2]
+    #fitness= evaluate(ind)
+    #chauffage=fitness[0]
+    #print(chauffage, type(chauffage))
+    csv_filename="IDM_NoMASS.csv"
+    overheating_from_csv(csv_filename)
 
     
 
