@@ -841,7 +841,7 @@ Schedule:Year,
     31;                      !- End Day 1
 
 Schedule:Year,
-    Ch1_Chauffage,           !- Name
+    ZCh1_Chauffage,          !- Name
     Any Number,              !- Schedule Type Limits Name
     Ch1_Chauffage,           !- Schedule:Week Name 1
     1,                       !- Start Month 1
@@ -859,7 +859,7 @@ Schedule:Year,
     31;                      !- End Day 1
 
 Schedule:Year,
-    Sdb_Chauffage,           !- Name
+    ZSdb_Chauffage,          !- Name
     Any Number,              !- Schedule Type Limits Name
     Sdb_Chauffage,           !- Schedule:Week Name 1
     1,                       !- Start Month 1
@@ -1079,6 +1079,24 @@ Schedule:Year,
     Volet_SDB_N_4,           !- Name
     Any Number,              !- Schedule Type Limits Name
     Volets_R,                !- Schedule:Week Name 1
+    1,                       !- Start Month 1
+    1,                       !- Start Day 1
+    12,                      !- End Month 1
+    31;                      !- End Day 1
+
+Schedule:Year,
+    ZCh2_Chauffage,          !- Name
+    Any Number,              !- Schedule Type Limits Name
+    Ch1_Chauffage,           !- Schedule:Week Name 1
+    1,                       !- Start Month 1
+    1,                       !- Start Day 1
+    12,                      !- End Month 1
+    31;                      !- End Day 1
+
+Schedule:Year,
+    ZCh3_Chauffage,          !- Name
+    Any Number,              !- Schedule Type Limits Name
+    Ch1_Chauffage,           !- Schedule:Week Name 1
     1,                       !- Start Month 1
     1,                       !- Start Day 1
     12,                      !- End Month 1
@@ -6855,12 +6873,12 @@ ZoneControl:Thermostat,
 
 ThermostatSetpoint:DualSetpoint,
     Consigne_ch2 Dual SP Control,  !- Name
-    Ch1_Chauffage,           !- Heating Setpoint Temperature Schedule Name
+    ZCh2_Chauffage,          !- Heating Setpoint Temperature Schedule Name
     HVACTemplate-Always 50;  !- Cooling Setpoint Temperature Schedule Name
 
 ThermostatSetpoint:DualSetpoint,
     Consigne_ch3 Dual SP Control,  !- Name
-    Ch1_Chauffage,           !- Heating Setpoint Temperature Schedule Name
+    ZCh3_Chauffage,          !- Heating Setpoint Temperature Schedule Name
     HVACTemplate-Always 50;  !- Cooling Setpoint Temperature Schedule Name
 
 ThermostatSetpoint:DualSetpoint,
@@ -6870,12 +6888,12 @@ ThermostatSetpoint:DualSetpoint,
 
 ThermostatSetpoint:DualSetpoint,
     Consigne_ch1 Dual SP Control,  !- Name
-    Ch1_Chauffage,           !- Heating Setpoint Temperature Schedule Name
+    ZCh1_Chauffage,          !- Heating Setpoint Temperature Schedule Name
     HVACTemplate-Always 50;  !- Cooling Setpoint Temperature Schedule Name
 
 ThermostatSetpoint:DualSetpoint,
     Consigne_sdb Dual SP Control,  !- Name
-    Sdb_Chauffage,           !- Heating Setpoint Temperature Schedule Name
+    ZSdb_Chauffage,          !- Heating Setpoint Temperature Schedule Name
     HVACTemplate-Always 50;  !- Cooling Setpoint Temperature Schedule Name
 
 
@@ -7329,6 +7347,31 @@ EnergyManagementSystem:Sensor,
     ZSdbBlindFraction,       !- Output:Variable or Output:Meter Index Key Name
     Schedule Value;          !- Output:Variable or Output:Meter Name
 
+EnergyManagementSystem:Sensor,
+    occ_RDC,                 !- Name
+    RDCThermalZoneNumberOfOccupants,  !- Output:Variable or Output:Meter Index Key Name
+    Schedule Value ;         !- Output:Variable or Output:Meter Name
+
+EnergyManagementSystem:Sensor,
+    occ_ZSdb,                !- Name
+    ZSdbNumberOfOccupants,   !- Output:Variable or Output:Meter Index Key Name
+    Schedule Value ;         !- Output:Variable or Output:Meter Name
+
+EnergyManagementSystem:Sensor,
+    occ_ZCh1,                !- Name
+    ZCh1NumberOfOccupants,   !- Output:Variable or Output:Meter Index Key Name
+    Schedule Value ;         !- Output:Variable or Output:Meter Name
+
+EnergyManagementSystem:Sensor,
+    occ_ZCh2,                !- Name
+    ZCh2NumberOfOccupants,   !- Output:Variable or Output:Meter Index Key Name
+    Schedule Value ;         !- Output:Variable or Output:Meter Name
+
+EnergyManagementSystem:Sensor,
+    occ_ZCh3,                !- Name
+    ZCh3NumberOfOccupants,   !- Output:Variable or Output:Meter Index Key Name
+    Schedule Value ;         !- Output:Variable or Output:Meter Name
+
 
 !-   ===========  ALL OBJECTS IN CLASS: ENERGYMANAGEMENTSYSTEM:ACTUATOR ===========
 
@@ -7452,6 +7495,36 @@ EnergyManagementSystem:Actuator,
     schedule:year,           !- Actuated Component Type
     schedule value;          !- Actuated Component Control Type
 
+EnergyManagementSystem:Actuator,
+    chauff_RDC_EMS,          !- Name
+    RDC_Chauffage,           !- Actuated Component Unique Name
+    schedule:year,           !- Actuated Component Type
+    schedule value;          !- Actuated Component Control Type
+
+EnergyManagementSystem:Actuator,
+    chauff_ZSdb_EMS,         !- Name
+    ZSdb_Chauffage,          !- Actuated Component Unique Name
+    schedule:year,           !- Actuated Component Type
+    schedule value;          !- Actuated Component Control Type
+
+EnergyManagementSystem:Actuator,
+    chauff_ZCh1_EMS,         !- Name
+    ZCh1_Chauffage,          !- Actuated Component Unique Name
+    schedule:year,           !- Actuated Component Type
+    schedule value;          !- Actuated Component Control Type
+
+EnergyManagementSystem:Actuator,
+    chauff_ZCh2_EMS,         !- Name
+    ZCh2_Chauffage,          !- Actuated Component Unique Name
+    schedule:year,           !- Actuated Component Type
+    schedule value;          !- Actuated Component Control Type
+
+EnergyManagementSystem:Actuator,
+    chauff_ZCh3_EMS,         !- Name
+    ZCh3_Chauffage,          !- Actuated Component Unique Name
+    schedule:year,           !- Actuated Component Type
+    schedule value;          !- Actuated Component Control Type
+
 
 !-   ===========  ALL OBJECTS IN CLASS: ENERGYMANAGEMENTSYSTEM:PROGRAMCALLINGMANAGER ===========
 
@@ -7463,6 +7536,15 @@ EnergyManagementSystem:ProgramCallingManager,
     Set_Shade_Ch1_State,     !- Program Name 3
     Set_Shade_Ch2_State,     !- Program Name 4
     Set_Shade_Sdb_State;     !- Program Name 5
+
+EnergyManagementSystem:ProgramCallingManager,
+    consigne chauffage EMS control,  !- Name
+    BeginTimestepBeforePredictor,  !- EnergyPlus Model Calling Point
+    Set_heating_RDC,         !- Program Name 1
+    Set_heating_ZCh1,        !- Program Name 2
+    Set_heating_ZCh2,        !- Program Name 3
+    Set_heating_ZCh3,        !- Program Name 4
+    Set_heating_ZSdb;        !- Program Name 5
 
 
 !-   ===========  ALL OBJECTS IN CLASS: ENERGYMANAGEMENTSYSTEM:PROGRAM ===========
@@ -7611,6 +7693,46 @@ EnergyManagementSystem:Program,
     Set VoletSdbN3_EMS = 0,  !- A25
     Set VoletSdbN4_EMS = 0,  !- A26
     ENDIF;                   !- A27
+
+EnergyManagementSystem:Program,
+    Set_heating_RDC,         !- Name
+    IF (occ_RDC>0),          !- Program Line 1
+    Set chauff_RDC_EMS = 19, !- Program Line 2
+    ELSE,                    !- A4
+    Set chauff_RDC_EMS = 15, !- A5
+    ENDIF;                   !- A6
+
+EnergyManagementSystem:Program,
+    Set_heating_ZCh1,        !- Name
+    IF (occ_ZCh1>0),         !- Program Line 1
+    Set chauff_ZCh1_EMS = 18,!- Program Line 2
+    ELSE,                    !- A4
+    Set chauff_ZCh1_EMS = 15,!- A5
+    ENDIF;                   !- A6
+
+EnergyManagementSystem:Program,
+    Set_heating_ZSdb,        !- Name
+    IF (occ_ZSdb>0),         !- Program Line 1
+    Set chauff_ZSdb_EMS = 19,!- Program Line 2
+    ELSE,                    !- A4
+    Set chauff_ZSdb_EMS = 15,!- A5
+    ENDIF;                   !- A6
+
+EnergyManagementSystem:Program,
+    Set_heating_ZCh2,        !- Name
+    IF (occ_ZCh2>0),         !- Program Line 1
+    Set chauff_ZCh2_EMS = 18,!- Program Line 2
+    ELSE,                    !- A4
+    Set chauff_ZCh2_EMS = 15,!- A5
+    ENDIF;                   !- A6
+
+EnergyManagementSystem:Program,
+    Set_heating_ZCh3,        !- Name
+    IF (occ_ZCh3>0),         !- Program Line 1
+    Set chauff_ZCh3_EMS = 18,!- Program Line 2
+    ELSE,                    !- A4
+    Set chauff_ZCh3_EMS = 15,!- A5
+    ENDIF;                   !- A6
 
 
 !-   ===========  ALL OBJECTS IN CLASS: EXTERNALINTERFACE ===========
