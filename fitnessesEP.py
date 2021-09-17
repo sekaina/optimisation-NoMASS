@@ -293,7 +293,7 @@ def evaluate_model(model, indb, surfacemat):
     runner = EPlusRunner(EPLUSPATH)
     fmu_name = "agentFMU.fmu"
     fmu_file = IDFPATH + fmu_name
-    simulation = runner.run_one(model, EPWFILE, extra_file=fmu_file) #extra_file dans le cas de fmu NoMASS
+    simulation = runner.run_one(model, EPWFILE, extra_files=[fmu_file]) #extra_file dans le cas de fmu NoMASS
     result=simulation.time_series
 
     logger.debug("Evaluation of %s with %s in %s s" %
@@ -569,8 +569,8 @@ def economy_operation(Echauffage):
     return cost
 
 if __name__ == "__main__": #pour tester
-    #ind=[20,40,20,2]
-    #fitness= evaluate(ind)
+    ind=[20,40,20,2]
+    fitness= evaluate(ind)
     #chauffage=fitness[0]
     #print(chauffage, type(chauffage))
     csv_filename="IDM_NoMASS.csv"
