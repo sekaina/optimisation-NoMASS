@@ -222,7 +222,6 @@ def heating_needs(result):
             logger.debug("found table")
             table=result['table']
             Chauffage = float(table[49][13])# [49][6] in EP v9.3   [49][13] in EP v9.5 pour simulation annuelle
-            logger.debug("In table.csv, %s kWh" % (Chauffage))
         return Chauffage
 
 def heating_needs_modified(result):
@@ -301,7 +300,8 @@ def evaluate_model(model, indb, surfacemat):
                      (model.idfname, indb, time.time() - start_time))
 
     logger.debug("Computing objectives from result dataframes")
-    heating = float(heating_needs(result))
+    heating = float(heating_needs(result))/config.building_area # kwh par m2
+    logger.debug("In table.csv, %s kWh/m2" % (heating))
     comfort = float(overheating(result))
 
     logger.debug("%s hours of discomfort (where temperature is above Tconf+2°C) " % (comfort))
@@ -312,8 +312,8 @@ def evaluate_model(model, indb, surfacemat):
     logger.debug("computing operation price")
     operation = economy_operation(heating)
     logger.debug("Operation Price %s " % (operation))
-    total_price = investment + operation
-    logger.debug("Total Price %s " % (total_price))
+    total_price = (investment + operation)/config.building_area # euros par m2
+    logger.debug("Total Price %s euros/m2" % (total_price))
     return heating, comfort, total_price
 
 
@@ -454,6 +454,40 @@ def overheating(result):
     logger.debug("heures inconfort = %s " % (heures_inconfort_tot))
     return heures_inconfort_tot
 
+def overheating_from_csv(csv_filename):
+    logger.debug("computing overheating")
+    indoor = None
+    out = None
+    heures_inconfort=[]
+    oh = []
+    data=pd.read_csv(csv_filename)
+    indoor = data.iloc[:, [
+        "Mean Air Temperature" in col for col in data.columns]]
+    out = data.iloc[:,[
+        "Outdoor Air Drybulb Temperature" in col for col in data.columns]]
+    Text_moy_jour=[float(out[i:289+i].mean()) for i in range(0,len(out),288)]
+    Text_glissantes=moyenne_glissante_norme(Text_moy_jour, 7)#moyenne glissante sur 7 jours selon la norme NF EN 16798-1
+    Tconfort=[0.33*Tmoyext+18.8 for Tmoyext in Text_glissantes] # temperature de confort adaptatif selon la norme NF EN 16798-1
+    for zone, area in config.zones_areas.items():
+        oh_zone=0
+        heures_inconfort_zone=0
+        indoor_zone=indoor.iloc[:,[zone in col for col in indoor.columns]]
+        T_moy_jour=[float(indoor_zone[i:289+i].mean()) for i in range(0,len(indoor_zone),288)]
+        for i in range(len(T_moy_jour)):
+            if T_moy_jour[i]>(Tconfort[i]+2):
+                oh_zone+=T_moy_jour[i]-(Tconfort[i]+2)
+                heures_inconfort_zone+=1
+        oh.append(oh_zone)
+        heures_inconfort.append(heures_inconfort_zone)
+    area_tot=config.building_area
+    areas=[]
+    for zone,area in config.zones_areas.items():
+        areas.append(area)
+    oh_tot=sum([x*y for x,y in zip(areas,oh)])/area_tot  #somme pondérée par les surfaces
+    heures_inconfort_tot=sum([x*y for x,y in zip(areas,heures_inconfort)])/area_tot  
+    logger.debug("overheating = %s °C/h" % (oh_tot))
+    logger.debug("heures inconfort = %s " % (heures_inconfort_tot))
+    return heures_inconfort_tot
 
 
 
@@ -535,11 +569,12 @@ def economy_operation(Echauffage):
     return cost
 
 if __name__ == "__main__": #pour tester
-    ind=[20,40,20,2]
-    fitness= evaluate(ind)
-    chauffage=fitness[0]
-    print(chauffage, type(chauffage))
-
+    #ind=[20,40,20,2]
+    #fitness= evaluate(ind)
+    #chauffage=fitness[0]
+    #print(chauffage, type(chauffage))
+    csv_filename="IDM_NoMASS.csv"
+    overheating_from_csv(csv_filename)
 
     
 
