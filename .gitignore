@@ -45,7 +45,9 @@ Thumbs.db
 *.json
 *.png
 .vs
+model/EPT*
 Results_To_Plot
+calculate_overhating
 __pycache__
 *.expidf
 *.csv
@@ -64,3 +66,7 @@ __pycache__
 *table.html
 *meter.csv
 *.rvaudit
+data*.txt
+*data*.txt
+pareto*.txt
+*.dat
